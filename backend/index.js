@@ -75,6 +75,11 @@ app.post('/', upload.single('file'), async (req, res) => {
 
         let people_not_following = nonIntersection(merged, arr_of_followers)
 
+        // delete the file after it has been processed
+        console.log(extractDir, zipFilePath)
+        await fs.promises.rm(extractDir, { recursive: true });
+        await fs.promises.rm(zipFilePath);
+
         res.status(200).send(people_not_following);
 
     } catch (error) {
