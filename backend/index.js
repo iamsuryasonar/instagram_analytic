@@ -36,17 +36,23 @@ app.post('/', upload.single('file'), async (req, res) => {
             fs.mkdirSync(extractDir);
         }
 
+        console.log('unzipping...')
+
         await fs.createReadStream(zipFilePath)
             .pipe(unzipper.Extract({ path: extractDir }))
             .promise();
 
         const jsonDir = path.join(extractDir, 'connections', 'followers_and_following');
 
-        console.log(jsonDir);
+        console.log('reading followers json...')
 
         const followersData = await fs.promises.readFile(path.join(jsonDir, 'followers_1.json'), 'utf8');
 
+        console.log('reading followings json...')
+
         const followingsData = await fs.promises.readFile(path.join(jsonDir, 'following.json'), 'utf8');
+
+        console.log('parsing json...')
 
         let followersJson = await JSON.parse(followersData);
         let followingsJson = await JSON.parse(followingsData);
@@ -60,6 +66,8 @@ app.post('/', upload.single('file'), async (req, res) => {
         })
 
         let merged = [...arr_of_followers, ...arr_of_followings];
+
+        console.log('getting non-followers...')
 
         function nonIntersection(array1, array2) {
             return [...array1.filter(item => !array2.includes(item)), ...array2.filter(item => !array1.includes(item))];
