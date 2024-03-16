@@ -54,18 +54,18 @@ app.post('/', upload.single('file'), async (req, res) => {
 
         console.log('parsing json...')
 
-        let followersJson = await JSON.parse(followersData);
-        let followingsJson = await JSON.parse(followingsData);
+        let followersObj = await JSON.parse(followersData);
+        let followingsObj = await JSON.parse(followingsData);
 
-        let arr_of_followers = followersJson.map((item) => {
+        let followersArr = followersObj.map((item) => {
             return item.string_list_data[0].value;
         })
 
-        let arr_of_followings = followingsJson.relationships_following.map((item) => {
+        let followingsArr = followingsObj.relationships_following.map((item) => {
             return item.string_list_data[0].value;
         })
 
-        let merged = [...arr_of_followers, ...arr_of_followings];
+        let merged = [...followersArr, ...followingsArr];
 
         console.log('getting non-followers...')
 
@@ -73,14 +73,14 @@ app.post('/', upload.single('file'), async (req, res) => {
             return [...array1.filter(item => !array2.includes(item)), ...array2.filter(item => !array1.includes(item))];
         }
 
-        let people_not_following = nonIntersection(merged, arr_of_followers)
+        let nonFollowers = nonIntersection(merged, followersArr)
 
         // delete the file after it has been processed
         console.log(extractDir, zipFilePath)
         await fs.promises.rm(extractDir, { recursive: true });
         await fs.promises.rm(zipFilePath);
 
-        res.status(200).send(people_not_following);
+        res.status(200).send(nonFollowers);
 
     } catch (error) {
         console.error('Error uploading or extracting file:', error);
