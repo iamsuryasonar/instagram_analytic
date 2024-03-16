@@ -65,22 +65,57 @@ app.post('/', upload.single('file'), async (req, res) => {
             return item.string_list_data[0].value;
         })
 
-        let merged = [...followersArr, ...followingsArr];
+
+        function findMutual(followers, followings) {
+            let common = [];
+            for (let i = 0; i < followers.length; i++) {
+                if (followings.includes(followers[i])) {
+                    common.push(followers[i]);
+                }
+            }
+            return common;
+        }
+
+        function findNonMutual(mergedArr, mutualFollowers) {
+            return mergedArr.filter(item => !mutualFollowers.includes(item));
+        }
+
+        function findUsersIDontFollow(nonMutual, followingsArr) {
+            return nonMutual.filter(item => !followingsArr.includes(item));
+        }
+
+        function findUsersWhoDontFollowMeBack(nonMutual, followersArr) {
+            return nonMutual.filter(item => !followersArr.includes(item));
+        }
 
         console.log('getting non-followers...')
 
-        function nonIntersection(array1, array2) {
-            return [...array1.filter(item => !array2.includes(item)), ...array2.filter(item => !array1.includes(item))];
-        }
+        // mathematically intersection
+        const mutualFollowers = findMutual(followersArr, followingsArr)
 
-        let nonFollowers = nonIntersection(merged, followersArr)
+        // mathematically union
+        const mergedArr = [...followersArr, ...followingsArr]
+
+        // mathematically difference
+        const nonMutual = findNonMutual(mergedArr, mutualFollowers)
+
+        // mathematically difference
+        const nonFollowers = findUsersWhoDontFollowMeBack(nonMutual, followersArr);
+
+        // mathematically difference
+        const notFollowing = findUsersIDontFollow(nonMutual, followingsArr);
 
         // delete the file after it has been processed
-        console.log(extractDir, zipFilePath)
         await fs.promises.rm(extractDir, { recursive: true });
         await fs.promises.rm(zipFilePath);
 
-        res.status(200).send(nonFollowers);
+        res.status(200).send({
+            followers: followersArr,
+            followings: followingsArr,
+            nonFollowers,
+            notFollowing,
+            mutualFollowers,
+        });
 
     } catch (error) {
         console.error('Error uploading or extracting file:', error);

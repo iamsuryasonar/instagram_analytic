@@ -47,7 +47,10 @@ npm run dev
     - Download it.
 - Upload the JSON to this app and check your non-followers. 
 
+## Features:
 
-## What does it do:
-
-This app filters out the users that you follow but they don't.
+- Followers
+- Followings
+- Users you don't follow
+- Users who don't follow you
+- Mutual followers
