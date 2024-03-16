@@ -57,6 +57,24 @@ function App() {
             <p>{result?.length}</p>
           </p>}
         </div>
+        {!result && <div className=' p-8 bg-cyan-800 text-cyan-200 border border-cyan-600 shadow-xl rounded-md '>
+          <p className='font-bold text-lg'>Instructions:</p>
+          <ol className='list-disc list-inside'>
+            <li>Download followers data from instagram</li>
+            <li>Go to 'Download your information'</li>
+            <li>Go to 'Download or transfer information'</li>
+            <li>Go to 'Some of your information'</li>
+            <li>Select 'Followers and following' then click 'Next'</li>
+            <li>Select 'Download to device' and click 'Next'</li>
+            <li>Filter 'Format' to JSON</li>
+            <li>Click 'Create files'</li>
+            <li>Now the JSON file will be available in 'Download your information' section</li>
+            <li>Download it.</li>
+            <li>Upload the JSON to this app and check your non-followers.</li>
+          </ol>
+        </div>
+
+        }
         <div className='flex flex-col gap-4'>
           {result?.map((item) => {
             return <a href={`https://instagram.com/${item}`} key={item} className='p-4 bg-cyan-800 text-cyan-200  rounded-md flex flex-row justify-between items-center shadow-md hover:scale-105 transition-all ease-in-out duration-500' target='_blank'>
