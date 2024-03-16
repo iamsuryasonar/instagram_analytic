@@ -65,7 +65,6 @@ app.post('/', upload.single('file'), async (req, res) => {
             return item.string_list_data[0].value;
         })
 
-
         function findMutual(followers, followings) {
             let common = [];
             for (let i = 0; i < followers.length; i++) {
@@ -119,7 +118,7 @@ app.post('/', upload.single('file'), async (req, res) => {
 
     } catch (error) {
         console.error('Error uploading or extracting file:', error);
-        res.status(500).send('Failed to upload, extract, or process file');
+        res.status(500).send(`Something went wrong, ${error}`);
     }
 });
 

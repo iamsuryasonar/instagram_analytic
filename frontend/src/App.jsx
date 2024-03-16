@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 import spinner from './assets/spinner.svg'
 import visit from './assets/goto.svg'
@@ -14,6 +14,14 @@ function App() {
   const [menu, setMenu] = useState(false);
   const [tab, setTab] = useState('followers');
   const BASE_URL = import.meta.env.VITE_BASE_URL;
+
+  async function wakeUpServer() {
+    await fetch(BASE_URL);
+  }
+
+  useEffect(() => {
+    wakeUpServer();
+  }, [])
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
