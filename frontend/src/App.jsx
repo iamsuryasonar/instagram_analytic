@@ -41,10 +41,10 @@ function App() {
       } else {
         setAlert('Something went wrong!');
       }
-      setAlert('File uploaded successfully');
+      setAlert('File processed successfully');
     } catch (error) {
       console.error('Error uploading file:', error);
-      setAlert('Failed to upload file');
+      setAlert('Failed to process file');
     } finally {
       setTimeout(() => {
         setAlert('');
